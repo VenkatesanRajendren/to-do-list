@@ -3,8 +3,51 @@ import express from "express";
 const app = express();
 const port = 3000;
 
+const items = [
+    {id: 1, title: "Wake up"},
+];
+
+app.use(express.urlencoded({extended: true}));
+
 app.get("/", (req, res) => {
-    res.send("Hello, World!");
+    res.render("index.ejs", {items: items});
+});
+
+app.post("/add", (req, res) => {
+    const lastItemID = items.reduce((prev, cur) => {
+        if(cur.id > prev)
+            prev = cur.id;
+        return prev;
+    }, 0);
+    const data = {
+        id: lastItemID + 1,
+        title: req.body.item,
+    }
+    items.push(data);
+    res.redirect("/");
+});
+
+app.post("/update", (req, res) => {
+    try {
+        const id = req.body['update-item-id'];
+        const title = req.body['update-item-title'];
+        const index = items.findIndex((item) => item.id === parseInt(id));
+        if(index > -1) items[index].title = title;
+        res.redirect("/");
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post("/delete", (req, res) => {
+    try {
+        const id = req.body['remove-item-id'];
+        const index = items.findIndex((item) => item.id === parseInt(id) );
+        items.splice(index, 1);
+        res.redirect("/");
+    } catch (err) {
+        console.log(err);
+    }
 });
 
 app.listen(port, () => {
