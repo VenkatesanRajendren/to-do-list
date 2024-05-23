@@ -7,6 +7,7 @@ const items = [
     {id: 1, title: "Wake up"},
 ];
 
+app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 
 app.get("/", (req, res) => {
@@ -21,7 +22,7 @@ app.post("/add", (req, res) => {
     }, 0);
     const data = {
         id: lastItemID + 1,
-        title: req.body.item,
+        title: req.body.title,
     }
     items.push(data);
     res.redirect("/");
@@ -29,8 +30,8 @@ app.post("/add", (req, res) => {
 
 app.post("/update", (req, res) => {
     try {
-        const id = req.body['update-item-id'];
-        const title = req.body['update-item-title'];
+        const id = req.body.id;
+        const title = req.body.title;
         const index = items.findIndex((item) => item.id === parseInt(id));
         if(index > -1) items[index].title = title;
         res.redirect("/");
@@ -41,7 +42,7 @@ app.post("/update", (req, res) => {
 
 app.post("/delete", (req, res) => {
     try {
-        const id = req.body['remove-item-id'];
+        const id = req.body.id;
         const index = items.findIndex((item) => item.id === parseInt(id) );
         items.splice(index, 1);
         res.redirect("/");

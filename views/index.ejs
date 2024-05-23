@@ -4,43 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To do list</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/app.js"></script>
 </head>
 <body>
-    <style>
-    .hide { display: none; }        
-    </style>
-    <% for (let index = 0; index < items.length; index++) { %>
-        <div class="item-container">
-            <form action="/delete" method="post">
-                <input type="checkbox" name="remove-item-id" value="<%= items[index].id %>" onclick = "this.form.submit()">
-            </form>
-            <strong class="item"><%= items[index].title %></strong>
-            <button class="toggle-edit-option">edit</button>
-            <form action="/update" method="post" class="edit-form hide">
-                <input type="hidden" name="update-item-id" value="<%= items[index].id %>">
-                <input type="text" name="update-item-title" value="<%= items[index].title %>">
-                <input type="submit" value="Edit">
-            </form>
-        </div>
-    <% } %>
-    <form action="/add" method="post">
-        <input type="text" id="item" name="item">
-        <input type="submit" value="Submit" id="add-item">
-    </form>
-    <script>
-        const editBtn = document.querySelectorAll('.toggle-edit-option');
-        editBtn.forEach(btn => {
-            btn.addEventListener('click', showEditForm);
-        });
-        function showEditForm(event) {
-            const btn  = event.target;
-            const container = btn.closest(".item-container");
-            const item = container.querySelector(".item");
-            const editForm = container.querySelector(".edit-form");
-            btn.classList.add("hide");
-            item.classList.add("hide");
-            editForm.classList.remove("hide");
-        }
-    </script>
+    <div class="container">
+        <%- include("partials/items", {items: items}) %>
+        <%- include("partials/add-form") %>
+    </div>
 </body>
 </html>

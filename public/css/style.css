@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: sans-serif ;
+    gap: 30px;
+}
+
+.container .items-list {
+    display: flex;
+    flex-direction:  column;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    box-shadow: 0 1px 6px #00000050;
+    gap: 10px;
+    padding: 30px;
+}
+
+.container .items-list .items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.item-title, .item-title-input { flex: 1; }
+
+.add-form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    gap: 10px;
+    padding: 0 30px;
+}
+
+.update-form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+input[type="text"] {
+    outline: none;
+    border: 1px solid lightgray;
+    height: 30px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.btn {
+    width: 100px;
+    height: 35px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: dodgerblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.add-item-btn { background-color: rgba(0, 128, 0, 0.9) }
+
+.update-item-btn { background-color: orange; }
+
+input[type="text"]:focus {
+    outline: none;
+    border: 2px solid dodgerblue;
+}
+
+.hide { display: none !important; }
