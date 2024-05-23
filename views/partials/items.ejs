@@ -1,0 +1,10 @@
+<div class="items-list">
+    <% for( let item of items ) { %>
+        <div class="items">
+            <%- include('delete-form', {item: item}) %>
+            <strong class="item-title"><%= item.title %></strong>
+            <button class="btn edit-form-btn">Edit</button>
+            <%- include('update-form', {item: item}) %>
+        </div>
+    <% } %>
+</div>
