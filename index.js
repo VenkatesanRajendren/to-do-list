@@ -1,53 +1,64 @@
 import express from "express";
+import pg from "pg";
 
 const app = express();
 const port = 3000;
 
-const items = [
-    {id: 1, title: "Wake up"},
-];
+const db = new pg.Client({
+    host: "localhost",
+    port: 5432,
+    user: "postgres",
+    password: "Venky@2001",
+    database: "to_do_list",
+});
+
+db.connect();
 
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 
-app.get("/", (req, res) => {
-    res.render("index.ejs", {items: items});
-});
-
-app.post("/add", (req, res) => {
-    const lastItemID = items.reduce((prev, cur) => {
-        if(cur.id > prev)
-            prev = cur.id;
-        return prev;
-    }, 0);
-    const data = {
-        id: lastItemID + 1,
-        title: req.body.title,
-    }
-    items.push(data);
-    res.redirect("/");
-});
-
-app.post("/update", (req, res) => {
+app.get("/", async (req, res) => {
     try {
-        const id = req.body.id;
-        const title = req.body.title;
-        const index = items.findIndex((item) => item.id === parseInt(id));
-        if(index > -1) items[index].title = title;
+        const result = await db.query("SELECT * FROM items ORDER BY id");
+        const items  = result.rows;
+        res.render("index.ejs", {items: items});
+    } catch (err) {
+        console.log(err);
+        res.send("Error occured while accessing this page");
+    }
+    
+});
+
+app.post("/add", async (req, res) => {
+    try {
+        const data = [req.body.title];
+        await db.query("INSERT INTO items (title) VALUES ($1)", data);
         res.redirect("/");
     } catch (err) {
         console.log(err);
+        res.send("Error occured while adding an item");
     }
 });
 
-app.post("/delete", (req, res) => {
+app.post("/update", async (req, res) => {
     try {
-        const id = req.body.id;
-        const index = items.findIndex((item) => item.id === parseInt(id) );
-        items.splice(index, 1);
+        const data = [req.body.title, req.body.id];
+        await db.query("UPDATE items SET title = $1 WHERE id = $2", data);
         res.redirect("/");
     } catch (err) {
         console.log(err);
+        res.send("Error occured while updating the item");
+    }
+});
+
+app.post("/delete", async (req, res) => {
+    try {
+        const data = [req.body.id];
+        await db.query("DELETE FROM items WHERE id = $1", data);
+        res.redirect("/");
+    } catch (err) {
+        console.log(err);
+        res.send("Error occured while deleting the item");
     }
 });
 
